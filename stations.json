@@ -1,0 +1,24 @@
+{
+  "stations": {
+    "A": { "price": 0 },
+    "B": { "price": 5 },
+    "C": { "price": 10 },
+    "D": { "price": 15 },
+    "E": { "price": 20 },
+    "F": { "price": 25 },
+    "G": { "price": 30 },
+    "H": { "price": 35 },
+    "I": { "price": 40 },
+    "J": { "price": 45 },
+    "K": { "price": 50 },
+    "L": { "price": 55 },
+    "M": { "price": 60 },
+    "N": { "price": 65 },
+    "O": { "price": 70 },
+    "P": { "price": 75 },
+    "Q": { "price": 80 },
+    "R": { "price": 85 },
+    "S": { "price": 90 },
+    "T": { "price": 100 }
+  }
+}

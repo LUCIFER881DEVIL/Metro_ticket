@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Metro Ticket System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: white;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .container {
+            background: white;
+            color: black;
+            width: 400px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 25px rgba(0,0,0,0.6);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        select, input {
+            width: 95%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 95%;
+            padding: 12px;
+            margin-top: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .secondary {
+            background: #28a745;
+        }
+
+        .secondary:hover {
+            background: #1e7e34;
+        }
+
+        .danger {
+            background: #dc3545;
+        }
+
+        .danger:hover {
+            background: #a71d2a;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>🚇 Metro Ticket System</h2>
+
+    <label>Source Station</label>
+    <select id="source"></select>
+
+    <label>Destination Station</label>
+    <select id="destination"></select>
+
+    <button onclick="bookTicket()">🎫 Buy Ticket</button>
+
+    <hr>
+
+    <input id="ticketId" placeholder="Enter Ticket ID">
+
+    <button class="secondary" onclick="entry()">🚉 Entry</button>
+    <button class="danger" onclick="exitTicket()">🏁 Exit</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+const stations = [
+    "A","B","C","D","E","F","G","H","I","J",
+    "K","L","M","N","O","P","Q","R","S","T"
+];
+
+function loadStations() {
+    const source = document.getElementById("source");
+    const destination = document.getElementById("destination");
+
+    stations.forEach(station => {
+        let opt1 = document.createElement("option");
+        opt1.value = station;
+        opt1.text = station;
+
+        let opt2 = document.createElement("option");
+        opt2.value = station;
+        opt2.text = station;
+
+        source.appendChild(opt1);
+        destination.appendChild(opt2);
+    });
+}
+
+async function bookTicket() {
+    const source = document.getElementById("source").value;
+    const destination = document.getElementById("destination").value;
+
+    if (source === destination) {
+        document.getElementById("result").innerText = "❌ Same stations not allowed";
+        return;
+    }
+
+    const res = await fetch("/ticket", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ source, destination })
+    });
+
+    const data = await res.json();
+
+    document.getElementById("result").innerHTML =
+        "🎫 Ticket ID: " + data.id + "<br>💰 Price: ₹" + data.price;
+
+    document.getElementById("ticketId").value = data.id;
+}
+
+async function entry() {
+    const id = document.getElementById("ticketId").value;
+
+    const res = await fetch("/ticket/entry/" + id, {
+        method: "POST"
+    });
+
+    const text = await res.text();
+
+    document.getElementById("result").innerText = text;
+}
+
+async function exitTicket() {
+    const id = document.getElementById("ticketId").value;
+
+    const res = await fetch("/ticket/exit/" + id, {
+        method: "POST"
+    });
+
+    const text = await res.text();
+
+    document.getElementById("result").innerText = text;
+}
+
+loadStations();
+</script>
+
+</body>
+</html>
